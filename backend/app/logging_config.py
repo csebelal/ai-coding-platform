@@ -1,5 +1,6 @@
 import logging
 import sys
+import os
 from logging.handlers import RotatingFileHandler
 from app.config import settings
 
@@ -24,8 +25,10 @@ def setup_logging():
     root_logger.addHandler(console_handler)
 
     # File handler (rotating, max 10MB, keep 5 backups)
+    log_dir = "logs"
+    os.makedirs(log_dir, exist_ok=True)
     file_handler = RotatingFileHandler(
-        "logs/app.log",
+        os.path.join(log_dir, "app.log"),
         maxBytes=10 * 1024 * 1024,
         backupCount=5,
         encoding="utf-8",

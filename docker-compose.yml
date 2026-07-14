@@ -42,13 +42,13 @@ services:
       - PYTHONPATH=/backend:/app
     volumes:
       - ./backend:/backend
-      - ./worker/app:/app
+      - ./worker/app:/app/app
       - repos_data:/repos
     depends_on:
       - postgres
       - redis
       - qdrant
-    command: celery -A app.celery_app worker --loglevel=info --concurrency=4
+    command: sh -c "cd /app/app && PYTHONPATH=/backend:/app/app celery -A celery_app worker --loglevel=info --concurrency=4"
 
   # Frontend
   frontend:
