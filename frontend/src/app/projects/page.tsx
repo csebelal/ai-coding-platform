@@ -40,7 +40,7 @@ export default function ProjectsPage() {
     e.preventDefault();
     setCreating(true);
     try {
-      await api.createProject({ name, description, repository_url: repoUrl || undefined });
+      await api.createProject({ name, description, repo_url: repoUrl || undefined });
       setShowCreate(false);
       setName('');
       setDescription('');

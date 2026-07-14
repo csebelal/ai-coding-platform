@@ -1,5 +1,5 @@
-from pydantic import BaseModel
-from typing import Optional
+from pydantic import BaseModel, field_serializer
+from typing import Optional, Any
 from datetime import datetime
 from decimal import Decimal
 
@@ -18,8 +18,8 @@ class TaskUpdate(BaseModel):
     budget_limit: Optional[Decimal] = None
 
 class TaskResponse(TaskBase):
-    id: str
-    project_id: str
+    id: Any
+    project_id: Any
     status: str
     workflow_state: Optional[str]
     current_agent: Optional[str]
@@ -33,12 +33,16 @@ class TaskResponse(TaskBase):
     created_at: datetime
     updated_at: Optional[datetime]
 
+    @field_serializer('id', 'project_id')
+    def serialize_uuid(self, value, _info):
+        return str(value)
+
     class Config:
         from_attributes = True
 
 class AgentRunResponse(BaseModel):
-    id: str
-    task_id: str
+    id: Any
+    task_id: Any
     agent_type: str
     status: str
     model_used: Optional[str]
@@ -49,6 +53,10 @@ class AgentRunResponse(BaseModel):
     completed_at: Optional[datetime]
     error_message: Optional[str]
     created_at: datetime
+
+    @field_serializer('id', 'task_id')
+    def serialize_uuid(self, value, _info):
+        return str(value)
 
     class Config:
         from_attributes = True

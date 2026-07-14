@@ -1,6 +1,7 @@
-from pydantic import BaseModel, EmailStr
-from typing import Optional
+from pydantic import BaseModel, EmailStr, field_serializer
+from typing import Optional, Any
 from datetime import datetime
+import uuid
 
 class UserBase(BaseModel):
     email: str
@@ -16,12 +17,16 @@ class UserLogin(BaseModel):
     password: str
 
 class UserResponse(BaseModel):
-    id: str
+    id: Any
     email: str
     full_name: Optional[str]
     avatar_url: Optional[str]
     auth_provider: str
     created_at: datetime
+
+    @field_serializer('id')
+    def serialize_id(self, value, _info):
+        return str(value)
 
     class Config:
         from_attributes = True

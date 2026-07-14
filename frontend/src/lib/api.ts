@@ -112,7 +112,7 @@ class ApiClient {
     return this.handleResponse<any>(response);
   }
 
-  async createProject(data: { name: string; description: string; repository_url?: string }) {
+  async createProject(data: { name: string; description: string; repo_url?: string }) {
     const response = await fetch(`${API_BASE}/projects`, {
       method: 'POST',
       headers: this.getHeaders(),
