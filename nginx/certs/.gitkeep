@@ -1,0 +1,7 @@
+# Generate self-signed cert for development:
+# openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+#   -keyout nginx/certs/selfsigned.key \
+#   -out nginx/certs/selfsigned.crt
+
+# For production, use certbot/Let's Encrypt:
+# certbot certonly --webroot -w /var/www/certbot -d yourdomain.com
