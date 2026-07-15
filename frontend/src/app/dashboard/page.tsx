@@ -39,7 +39,7 @@ export default function DashboardPage() {
   };
 
   const activeTasks = tasks.filter(t => t.status === 'running');
-  const totalCost = tasks.reduce((sum, t) => sum + t.current_cost, 0);
+  const totalCost = tasks.reduce((sum, t) => sum + Number(t.current_cost), 0);
   const completedTasks = tasks.filter(t => t.status === 'completed');
   const successRate = tasks.length > 0 ? (completedTasks.length / tasks.length) * 100 : 0;
 
@@ -116,7 +116,7 @@ export default function DashboardPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500">{task.current_agent || '-'}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">${task.current_cost.toFixed(4)}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500">${Number(task.current_cost).toFixed(4)}</td>
                     <td className="px-6 py-4 text-sm text-gray-500">
                       {new Date(task.created_at).toLocaleDateString()}
                     </td>
