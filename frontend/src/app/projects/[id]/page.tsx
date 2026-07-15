@@ -214,7 +214,7 @@ export default function ProjectDetailPage() {
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">{task.status}</td>
                       <td className="px-6 py-4 text-sm text-gray-500">
-                        ${task.current_cost.toFixed(4)} / ${task.budget_limit.toFixed(2)}
+                        ${Number(task.current_cost).toFixed(4)} / ${Number(task.budget_limit).toFixed(2)}
                       </td>
                       <td className="px-6 py-4 text-sm space-x-2">
                         {task.status === 'pending' && (

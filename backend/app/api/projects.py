@@ -10,7 +10,7 @@ from app.services.auth import get_current_user
 
 router = APIRouter()
 
-@router.get("/", response_model=List[ProjectResponse])
+@router.get("", response_model=List[ProjectResponse])
 async def list_projects(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -18,7 +18,7 @@ async def list_projects(
     projects = db.query(Project).filter(Project.user_id == current_user.id).all()
     return projects
 
-@router.post("/", response_model=ProjectResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=ProjectResponse, status_code=status.HTTP_201_CREATED)
 async def create_project(
     project_data: ProjectCreate,
     current_user: User = Depends(get_current_user),

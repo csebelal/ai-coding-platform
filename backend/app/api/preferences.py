@@ -10,7 +10,7 @@ from app.services.auth import get_current_user
 router = APIRouter()
 
 
-@router.get("/", response_model=PreferencesResponse)
+@router.get("", response_model=PreferencesResponse)
 async def get_preferences(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -28,7 +28,7 @@ async def get_preferences(
     return prefs
 
 
-@router.put("/", response_model=PreferencesResponse)
+@router.put("", response_model=PreferencesResponse)
 async def update_preferences(
     data: PreferencesBase,
     current_user: User = Depends(get_current_user),

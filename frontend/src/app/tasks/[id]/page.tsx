@@ -168,7 +168,7 @@ export default function TaskDetailPage() {
           <div className="bg-white rounded-lg shadow p-4">
             <div className="text-sm text-gray-500">Cost</div>
             <div className="text-lg font-semibold text-gray-900">
-              ${status.cost.toFixed(4)} / ${status.budget_limit.toFixed(2)}
+               ${Number(status.cost).toFixed(4)} / ${Number(status.budget_limit).toFixed(2)}
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
               <div
@@ -214,7 +214,7 @@ export default function TaskDetailPage() {
                         {run.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">${run.cost.toFixed(4)}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500">${Number(run.cost).toFixed(4)}</td>
                     <td className="px-6 py-4 text-sm text-gray-500">
                       {run.started_at ? new Date(run.started_at).toLocaleTimeString() : '-'}
                     </td>

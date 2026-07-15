@@ -29,7 +29,7 @@ class TaskStatusResponse(BaseModel):
     completed_at: Optional[str]
     runs: List[dict]
 
-@router.get("/", response_model=List[TaskResponse])
+@router.get("", response_model=List[TaskResponse])
 async def list_tasks(
     project_id: Optional[str] = None,
     current_user: User = Depends(get_current_user),
@@ -43,7 +43,7 @@ async def list_tasks(
     tasks = query.all()
     return tasks
 
-@router.post("/", response_model=TaskResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=TaskResponse, status_code=status.HTTP_201_CREATED)
 async def create_task(
     task_data: TaskCreate,
     current_user: User = Depends(get_current_user),
