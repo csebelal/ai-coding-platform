@@ -2,6 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from pydantic import BaseModel
+from celery import Celery
+import os
 
 from app.database import get_db
 from app.models.user import User
@@ -11,6 +13,17 @@ from app.models.agent_run import AgentRun
 from app.schemas.task import TaskCreate, TaskUpdate, TaskResponse, AgentRunResponse
 from app.services.auth import get_current_user
 from app.services.orchestrator import Orchestrator
+
+celery_app = Celery(
+    "backend",
+    broker=os.getenv("REDIS_URL", "redis://localhost:6379/0"),
+    backend=os.getenv("REDIS_URL", "redis://localhost:6379/0"),
+)
+celery_app.conf.update(
+    task_serializer="json",
+    accept_content=["json"],
+    result_serializer="json",
+)
 
 router = APIRouter()
 
@@ -152,11 +165,8 @@ async def execute_task(
             detail="Task is already being processed"
         )
     
-    # Import Celery task
-    from worker.app.tasks import execute_orchestrator
-    
-    # Queue task for execution
-    execute_orchestrator.delay(str(task_id))
+    # Queue task for execution via Celery
+    celery_app.send_task("tasks.execute_orchestrator", args=[str(task_id)])
     
     # Update status
     task.status = "queued"
@@ -192,11 +202,8 @@ async def cancel_task(
             detail="Task cannot be cancelled"
         )
     
-    # Import Celery task
-    from worker.app.tasks import cancel_task as cancel_task_celery
-    
-    # Queue cancel
-    cancel_task_celery.delay(str(task_id))
+    # Queue cancellation via Celery
+    celery_app.send_task("tasks.cancel_task", args=[str(task_id)])
     
     return {
         "task_id": str(task.id),

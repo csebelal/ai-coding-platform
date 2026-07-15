@@ -1,6 +1,7 @@
-from pydantic import BaseModel
-from typing import Optional
+from pydantic import BaseModel, field_serializer
+from typing import Optional, Any
 from decimal import Decimal
+from uuid import UUID
 
 
 class PreferencesBase(BaseModel):
@@ -18,8 +19,14 @@ class PreferencesBase(BaseModel):
 
 
 class PreferencesResponse(PreferencesBase):
-    id: str
-    user_id: str
+    id: Any
+    user_id: Any
 
     class Config:
         from_attributes = True
+
+    @field_serializer("id", "user_id")
+    def serialize_uuid(self, value: Any) -> str:
+        if isinstance(value, UUID):
+            return str(value)
+        return str(value)

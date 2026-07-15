@@ -5,6 +5,7 @@ from typing import List
 from app.database import get_db
 from app.models.user import User
 from app.models.project import Project
+from app.models.task import Task
 from app.schemas.project import ProjectCreate, ProjectUpdate, ProjectResponse
 from app.services.auth import get_current_user
 
@@ -100,6 +101,7 @@ async def delete_project(
             detail="Project not found"
         )
     
+    db.query(Task).filter(Task.project_id == project_id).delete()
     db.delete(project)
     db.commit()
     return None
