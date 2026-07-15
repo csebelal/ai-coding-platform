@@ -12,7 +12,7 @@ const PROVIDERS = [
 ];
 
 export default function SettingsPage() {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -63,30 +63,30 @@ export default function SettingsPage() {
 
   const selectedProvider = PROVIDERS.find(p => p.value === prefs.preferred_provider);
 
-  if (loading) return <div className="p-8 text-center">Loading...</div>;
+  if (loading) return <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+  </div>;
 
   return (
-    <div className="max-w-3xl mx-auto py-6 sm:px-6 lg:px-8">
-      <div className="px-4 py-6 sm:px-0">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Settings</h1>
+    <div className="px-4 py-6">
+      <div className="max-w-3xl mx-auto">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-white">Settings</h1>
+          <p className="text-sm text-gray-400 mt-1">Configure your AI providers and preferences</p>
+        </div>
 
-        {/* AI Provider */}
-        <section className="bg-white rounded-lg shadow p-6 mb-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">AI Provider</h2>
+        <div className="bg-gray-900 rounded-xl border border-gray-800 p-6 mb-6">
+          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">🤖 AI Provider</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Provider</label>
+              <label className="block text-sm font-medium text-gray-400 mb-1">Provider</label>
               <select
                 value={prefs.preferred_provider}
                 onChange={(e) => {
                   const provider = PROVIDERS.find(p => p.value === e.target.value);
-                  setPrefs({
-                    ...prefs,
-                    preferred_provider: e.target.value,
-                    preferred_model: provider?.models[0] || '',
-                  });
+                  setPrefs({ ...prefs, preferred_provider: e.target.value, preferred_model: provider?.models[0] || '' });
                 }}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-200 focus:outline-none focus:border-blue-500"
               >
                 {PROVIDERS.map(p => (
                   <option key={p.value} value={p.value}>{p.label}</option>
@@ -94,11 +94,11 @@ export default function SettingsPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Model</label>
+              <label className="block text-sm font-medium text-gray-400 mb-1">Model</label>
               <select
                 value={prefs.preferred_model}
                 onChange={(e) => setPrefs({ ...prefs, preferred_model: e.target.value })}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-200 focus:outline-none focus:border-blue-500"
               >
                 {selectedProvider?.models.map(m => (
                   <option key={m} value={m}>{m}</option>
@@ -106,126 +106,88 @@ export default function SettingsPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Temperature</label>
-              <input
-                type="number"
-                step="0.1"
-                min="0"
-                max="2"
-                value={prefs.temperature}
+              <label className="block text-sm font-medium text-gray-400 mb-1">Temperature</label>
+              <input type="number" step="0.1" min="0" max="2" value={prefs.temperature}
                 onChange={(e) => setPrefs({ ...prefs, temperature: parseFloat(e.target.value) })}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-              />
+                className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-200 focus:outline-none focus:border-blue-500" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Max Tokens</label>
-              <input
-                type="number"
-                step="256"
-                min="256"
-                max="32768"
-                value={prefs.max_tokens}
+              <label className="block text-sm font-medium text-gray-400 mb-1">Max Tokens</label>
+              <input type="number" step="256" min="256" max="32768" value={prefs.max_tokens}
                 onChange={(e) => setPrefs({ ...prefs, max_tokens: parseInt(e.target.value) })}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-              />
+                className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-200 focus:outline-none focus:border-blue-500" />
             </div>
           </div>
-        </section>
+        </div>
 
-        {/* Budget */}
-        <section className="bg-white rounded-lg shadow p-6 mb-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Budget Limits</h2>
+        <div className="bg-gray-900 rounded-xl border border-gray-800 p-6 mb-6">
+          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">💰 Budget Limits</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Default Task Budget ($)</label>
-              <input
-                type="number"
-                step="0.01"
-                min="0.01"
-                value={prefs.default_budget_limit}
+              <label className="block text-sm font-medium text-gray-400 mb-1">Default Task Budget ($)</label>
+              <input type="number" step="0.01" min="0.01" value={prefs.default_budget_limit}
                 onChange={(e) => setPrefs({ ...prefs, default_budget_limit: parseFloat(e.target.value) })}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-              />
+                className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-200 focus:outline-none focus:border-blue-500" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Daily Budget Limit ($)</label>
-              <input
-                type="number"
-                step="0.10"
-                min="0.10"
-                value={prefs.daily_budget_limit}
+              <label className="block text-sm font-medium text-gray-400 mb-1">Daily Budget Limit ($)</label>
+              <input type="number" step="0.10" min="0.10" value={prefs.daily_budget_limit}
                 onChange={(e) => setPrefs({ ...prefs, daily_budget_limit: parseFloat(e.target.value) })}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-              />
+                className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-200 focus:outline-none focus:border-blue-500" />
             </div>
           </div>
-        </section>
+        </div>
 
-        {/* Appearance */}
-        <section className="bg-white rounded-lg shadow p-6 mb-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Appearance</h2>
+        <div className="bg-gray-900 rounded-xl border border-gray-800 p-6 mb-6">
+          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">🎨 Appearance</h2>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm font-medium text-gray-900">Show Token Counts</div>
-                <div className="text-sm text-gray-500">Display token usage in task views</div>
+                <div className="text-sm font-medium text-gray-200">Show Token Counts</div>
+                <div className="text-xs text-gray-500">Display token usage in task views</div>
               </div>
-              <button
-                onClick={() => setPrefs({ ...prefs, show_token_counts: !prefs.show_token_counts })}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full ${
-                  prefs.show_token_counts ? 'bg-primary-600' : 'bg-gray-200'
-                }`}
-              >
+              <button onClick={() => setPrefs({ ...prefs, show_token_counts: !prefs.show_token_counts })}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  prefs.show_token_counts ? 'bg-blue-600' : 'bg-gray-700'
+                }`}>
                 <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
                   prefs.show_token_counts ? 'translate-x-6' : 'translate-x-1'
                 }`} />
               </button>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Editor Font Size</label>
-              <input
-                type="number"
-                min="10"
-                max="24"
-                value={prefs.editor_font_size}
+              <label className="block text-sm font-medium text-gray-400 mb-1">Editor Font Size</label>
+              <input type="number" min="10" max="24" value={prefs.editor_font_size}
                 onChange={(e) => setPrefs({ ...prefs, editor_font_size: parseInt(e.target.value) })}
-                className="mt-1 block w-32 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-              />
+                className="w-32 px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-200 focus:outline-none focus:border-blue-500" />
             </div>
           </div>
-        </section>
+        </div>
 
-        {/* Notifications */}
-        <section className="bg-white rounded-lg shadow p-6 mb-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Notifications</h2>
+        <div className="bg-gray-900 rounded-xl border border-gray-800 p-6 mb-6">
+          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">🔔 Notifications</h2>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm font-medium text-gray-900">Task Completion</div>
-                <div className="text-sm text-gray-500">Get notified when tasks finish</div>
+                <div className="text-sm font-medium text-gray-200">Task Completion</div>
+                <div className="text-xs text-gray-500">Get notified when tasks finish</div>
               </div>
-              <button
-                onClick={() => setPrefs({ ...prefs, task_completion_notifications: !prefs.task_completion_notifications })}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full ${
-                  prefs.task_completion_notifications ? 'bg-primary-600' : 'bg-gray-200'
-                }`}
-              >
+              <button onClick={() => setPrefs({ ...prefs, task_completion_notifications: !prefs.task_completion_notifications })}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  prefs.task_completion_notifications ? 'bg-blue-600' : 'bg-gray-700'
+                }`}>
                 <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
                   prefs.task_completion_notifications ? 'translate-x-6' : 'translate-x-1'
                 }`} />
               </button>
             </div>
           </div>
-        </section>
+        </div>
 
-        {/* Save */}
-        <div className="flex items-center justify-end space-x-3">
-          {saved && <span className="text-sm text-green-600">Saved!</span>}
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 text-sm font-medium disabled:opacity-50"
-          >
+        <div className="flex items-center justify-end gap-3">
+          {saved && <span className="text-sm text-green-400">✅ Saved!</span>}
+          <button onClick={handleSave} disabled={saving}
+            className="px-5 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-700 disabled:to-gray-700 disabled:text-gray-500 text-white rounded-lg text-sm font-medium transition-all">
             {saving ? 'Saving...' : 'Save Settings'}
           </button>
         </div>
